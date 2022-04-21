@@ -11,7 +11,7 @@ from diagrams.onprem.network import Nginx
 from diagrams.generic.device import Mobile
 from diagrams.aws.storage import S3
 
-with Diagram("zakat.ibarakah MVP architecture (level 2)", show=False):
+with Diagram("zakat.ibarakah MVP architecture (medium level)", show=False):
     client = Mobile("Client")
     auth = Custom("Google authentication", "googleAuth.png")
 
