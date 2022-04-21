@@ -11,23 +11,17 @@ from diagrams.onprem.network import Nginx
 from diagrams.generic.device import Mobile
 from diagrams.aws.storage import S3
 
-with Diagram("zakat.ibarakah MVP architecture", show=False):
+with Diagram("zakat.ibarakah MVP architecture (level 2)", show=False):
     client = Mobile("Client")
+    auth = Custom("Google authentication", "googleAuth.png")
 
     with Cluster("Client server"):
-        graphQLClient = Custom("GraphQL (Apollo Client)", "graphQL.png")
         nextjs = Custom("for SSR", "nextjs.png")
         react = React("React.js")
 
     with Cluster("Backend server"):
-        Droplet("DigitalOcean Droplet (Ubunto Linux machine)")
-        with Cluster("Secure web serving"):
-            nginx = Nginx("NGINX")
-            letsEncrypt = Custom("SSL", "letsEncrypt.png")
-        with Cluster("Business logic"):
-            graphQLServer = Custom("GraphQL (Apollo Server)", "graphQL.png")
-            nodejs = Nodejs("Node.js")
-            sequelize = Custom("Sequelize.js ORM", "sequelize.png")
+        nodejs = Nodejs("Node.js")
+        Droplet("DigitalOcean Droplet")
     
     with Cluster("Database"):
         postgres = PostgreSQL("PostgreSQL")
@@ -35,12 +29,9 @@ with Diagram("zakat.ibarakah MVP architecture", show=False):
 
     s3 = S3("AWS S3 bucket")
 
-
-    auth = Custom("Google authentication", "googleAuth.png")
-
-    client >> nextjs >> graphQLClient >> nginx >> graphQLServer >> nodejs >> sequelize >> postgres
-
-    nodejs >> s3
-
     nodejs >> Edge() << auth
     client >> auth
+
+    client >> nextjs >> nodejs >> postgres
+
+    nodejs >> s3
